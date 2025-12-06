@@ -7,6 +7,8 @@ from sklearn.metrics import f1_score, precision_score, recall_score, roc_auc_sco
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
+from lightgbm import LGBMClassifier
+from catboost import CatBoostClassifier
 from sklearn.svm import SVC
 from tqdm import tqdm
 
@@ -43,6 +45,8 @@ def train_single_project(project, train, test, metrics={}):
         (RandomForestClassifier(n_estimators=100, random_state=SEED), "RandomForest"),
         (XGBClassifier(n_estimators=100, random_state=SEED), "XGBoost"),
         (SVC(probability=True, random_state=SEED), "SVM"),
+        (LGBMClassifier(n_estimators=100, random_state=SEED, verbose=-1), "LightGBM"),
+        (CatBoostClassifier(n_estimators=100, random_state=SEED, verbose=False), "CatBoost"),
     ]:
         model.fit(X_train, y_train)
         if model_name == "XGBoost":
@@ -66,6 +70,8 @@ def train_all_project():
         "RandomForest": {},
         "XGBoost": {},
         "SVM": {},
+        "LightGBM": {},
+        "CatBoost": {},
     }
     for project in tqdm(projects, desc="projects", leave=True, total=len(projects)):
         train, test = projects[project]
@@ -84,6 +90,8 @@ def eval_all_project():
         "RandomForest": {},
         "XGBoost": {},
         "SVM": {},
+        "LightGBM": {}, 
+        "CatBoost": {},
     }
     for project in tqdm(projects, desc="projects", leave=True, total=len(projects)):
         train, test = projects[project]
